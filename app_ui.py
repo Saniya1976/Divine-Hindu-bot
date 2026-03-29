@@ -72,15 +72,39 @@ st.markdown("""
 
     /* WhatsApp Style Input Bar */
     [data-testid="stForm"] { border: none !important; padding: 0 !important; }
-    
+
+    /* Kill the hidden-but-space-consuming Streamlit label */
+    .stTextInput label {
+        display: none !important;
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        line-height: 0 !important;
+    }
+    /* Make the input wrapper stretch and center the input */
+    .stTextInput > div {
+        display: flex !important;
+        align-items: center !important;
+    }
+    .stTextInput > div > div {
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+    }
     .stTextInput > div > div > input {
         border-radius: 25px !important;
         background-color: #2a3942 !important;
         color: #e9edef !important;
         border: none !important;
-        padding: 15px 20px !important;
+        padding: 14px 20px !important;
         font-size: 1rem !important;
         height: 55px !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+        outline: none !important;
+    }
+    .stTextInput > div > div > input::placeholder {
+        color: #8696a0 !important;
     }
     
     .stButton > button[kind="primaryFormSubmit"] {
@@ -120,7 +144,7 @@ st.markdown("""
     }
 
     /* === Suggestion Chips === */
-    /* The chip row: horizontally scrollable */
+    /* Desktop: single horizontal scrollable row */
     .chip-scrollable > div[data-testid="stHorizontalBlock"] {
         display: flex !important;
         flex-wrap: nowrap !important;
@@ -131,7 +155,7 @@ st.markdown("""
         -ms-overflow-style: none !important;
     }
     .chip-scrollable > div[data-testid="stHorizontalBlock"]::-webkit-scrollbar { display: none !important; }
-    /* Each chip column: shrink to content */
+    /* Each chip column: shrink to content on desktop */
     .chip-scrollable > div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
         flex: 0 0 auto !important;
         min-width: unset !important;
@@ -160,6 +184,28 @@ st.markdown("""
 
     @media (max-width: 768px) {
         .chat-bubble { max-width: 92%; }
+
+        /* Mobile chips: 2 rows of 3 */
+        .chip-scrollable > div[data-testid="stHorizontalBlock"] {
+            flex-wrap: wrap !important;
+            overflow-x: hidden !important;
+            gap: 6px !important;
+            row-gap: 6px !important;
+        }
+        .chip-scrollable > div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
+            flex: 0 0 calc(33.33% - 4px) !important;
+            max-width: calc(33.33% - 4px) !important;
+            min-width: calc(33.33% - 4px) !important;
+            padding: 0 !important;
+            box-sizing: border-box !important;
+        }
+        .chip-scrollable .stButton > button {
+            width: 100% !important;
+            text-align: center !important;
+            justify-content: center !important;
+            font-size: 0.73rem !important;
+            padding: 6px 8px !important;
+        }
     }
 
     header {visibility: hidden;}
