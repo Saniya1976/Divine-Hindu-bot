@@ -1,4 +1,15 @@
+# Environment variables — NEVER commit these
 .env
+
+# Streamlit secrets (local override) — NEVER commit
+.streamlit/secrets.toml
+
+# Python cache
 __pycache__/
-.ipynb_checkpoints/
 *.pyc
+*.pyo
+.ipynb_checkpoints/
+
+# OS junk
+.DS_Store
+Thumbs.db

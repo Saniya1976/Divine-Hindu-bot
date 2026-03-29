@@ -4,8 +4,16 @@ import streamlit as st
 from groq import Groq
 from dotenv import load_dotenv
 
-# Load environment variables
+# Load .env for local development (no-op on Streamlit Cloud)
 load_dotenv()
+
+def get_api_key():
+    """Resolve API key: Streamlit Cloud secrets → .env → session state."""
+    try:
+        return st.secrets["GROQ_API_KEY"]
+    except Exception:
+        return os.getenv("GROQ_API_KEY") or st.session_state.get("groq_api_key")
+
 
 # --- Configuration & Data ---
 # Expanded Fake Database with 15 detailed records
@@ -226,7 +234,7 @@ def detect_intent(message):
     Msg: "{message}"
     """
     try:
-        client = Groq(api_key=os.getenv("GROQ_API_KEY") or st.session_state.get("groq_api_key"))
+        client = Groq(api_key=get_api_key())
         resp = client.chat.completions.create(model=DEFAULT_MODEL, messages=[{"role":"user","content":prompt}], response_format={"type":"json_object"})
         data = json.loads(resp.choices[0].message.content)
         if data.get("order_id"):
@@ -254,7 +262,7 @@ def generate_reply(user_msg, intent_data):
     6. Always start with 'Namaste! 🙏'.
     """
     try:
-        client = Groq(api_key=os.getenv("GROQ_API_KEY") or st.session_state.get("groq_api_key"))
+        client = Groq(api_key=get_api_key())
         resp = client.chat.completions.create(model=DEFAULT_MODEL, messages=[{"role":"system","content":sys_prompt},{"role":"user","content":user_msg}])
         return resp.choices[0].message.content
     except: return "Namaste! 🙏 Please check your connection or Order ID."
