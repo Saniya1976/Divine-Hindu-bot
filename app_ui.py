@@ -98,29 +98,68 @@ st.markdown("""
         margin-left: 10px !important;
     }
     
-    /* Horizontal Columns Layout for Input */
-    div[data-testid="stHorizontalBlock"] {
+
+    /* === Input Bar Layout === */
+    /* Target only the form's horizontal block (inside stForm) */
+    [data-testid="stForm"] div[data-testid="stHorizontalBlock"] {
         flex-wrap: nowrap !important;
         align-items: center !important;
+        gap: 8px !important;
     }
-    div[data-testid="column"]:nth-child(2) {
-        flex: 0 0 60px !important;
+    /* Send button column: fixed narrow width */
+    [data-testid="stForm"] div[data-testid="stHorizontalBlock"] > div[data-testid="column"]:last-child {
+        flex: 0 0 58px !important;
+        min-width: 58px !important;
+        max-width: 58px !important;
+        padding: 0 !important;
     }
-    
-    /* Chip Styles */
-    .stButton > button[key^="sugg_"] {
+    /* Text input column: take remaining space */
+    [data-testid="stForm"] div[data-testid="stHorizontalBlock"] > div[data-testid="column"]:first-child {
+        flex: 1 1 0 !important;
+        min-width: 0 !important;
+    }
+
+    /* === Suggestion Chips === */
+    /* The chip row: horizontally scrollable */
+    .chip-scrollable > div[data-testid="stHorizontalBlock"] {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        gap: 6px !important;
+        padding-bottom: 4px !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+    .chip-scrollable > div[data-testid="stHorizontalBlock"]::-webkit-scrollbar { display: none !important; }
+    /* Each chip column: shrink to content */
+    .chip-scrollable > div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
+        flex: 0 0 auto !important;
+        min-width: unset !important;
+        width: auto !important;
+        padding: 0 2px !important;
+    }
+    /* Chip button appearance */
+    .chip-scrollable .stButton > button {
         border-radius: 15px !important;
         background-color: #202c33 !important;
         border: 1px solid #334049 !important;
-        color: #8696a0 !important;
-        font-size: 0.75rem !important;
-        padding: 2px 10px !important;
+        color: #e9edef !important;
+        font-size: 0.78rem !important;
+        padding: 5px 14px !important;
+        white-space: nowrap !important;
+        height: auto !important;
+        min-height: 32px !important;
+        width: auto !important;
+        min-width: unset !important;
+        transition: background 0.15s !important;
     }
-    
+    .chip-scrollable .stButton > button:hover {
+        background-color: #2a3942 !important;
+        border-color: #53bdeb !important;
+    }
+
     @media (max-width: 768px) {
-        .chat-bubble { max-width: 90%; }
-        /* Hide non-priority chips on mobile */
-        div[data-testid="column"]:nth-child(n+4) button[key^="sugg_"] { display: none !important; }
+        .chat-bubble { max-width: 92%; }
     }
 
     header {visibility: hidden;}
@@ -193,14 +232,17 @@ st.markdown(chat_html, unsafe_allow_html=True)
 # Fixed Bottom Footer
 st.markdown('<div class="input-wrapper">', unsafe_allow_html=True)
 
-# Chips
-st.markdown("<div style='margin-bottom:8px; color:#8696a0; font-size:0.7rem; font-weight:600; text-transform:uppercase;'>💡 Suggestions</div>", unsafe_allow_html=True)
+# Chips — horizontally scrollable row (works on all screen sizes)
+st.markdown("<div style='margin-bottom:6px; color:#8696a0; font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;'>💡 Suggestions</div>", unsafe_allow_html=True)
 suggestions = ["Track My Order", "Return Policy", "Payment Issues", "Talk to Agent", "Shipping Info", "Order History"]
 clicked_s = None
-cols = st.columns(len(suggestions))
+# Wrap chip columns in a div with class for scoped CSS
+st.markdown("<div class='chip-scrollable'>", unsafe_allow_html=True)
+_chip_cols = st.columns(len(suggestions))
 for i, s in enumerate(suggestions):
-    with cols[i]:
-        if st.button(s, key=f"sugg_{i}"): clicked_s = s
+    with _chip_cols[i]:
+        if st.button(s, key=f"sugg_{i}", use_container_width=False): clicked_s = s
+st.markdown("</div>", unsafe_allow_html=True)
 
 # Form
 with st.form(key='wa_form', clear_on_submit=True):
