@@ -270,7 +270,7 @@ def generate_reply(user_msg, intent_data):
 # --- UI Assembly ---
 
 # Header
-st.markdown(f'<div class="whatsapp-header"><div class="header-content"><div class="avatar">DH</div><div><div class="brand-name">Divine Hindu AI Assistant</div><div class="online-status">online</div></div></div></div>', unsafe_allow_html=True)
+st.markdown(f'<div class="whatsapp-header"><div class="header-content"><div class="avatar">🪷</div><div><div class="brand-name">Divine Hindu AI Assistant</div><div class="online-status">online</div></div></div></div>', unsafe_allow_html=True)
 
 if "messages" not in st.session_state: st.session_state.messages = []
 
