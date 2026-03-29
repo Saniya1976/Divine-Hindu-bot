@@ -255,17 +255,16 @@ def generate_reply(user_msg, intent_data):
     You are 'Divine Hindu AI Assistant'. Data: {ctx}
     STRICT RULES:
     1. MAX 2 SENTENCES. No explanation of ability.
-    2. If ID missing: "Namaste! 🙏 Please share your Order ID (DH101-DH115) so I can assist you."
+    2. If ID missing: "Please share your Order ID (DH101-DH115) so I can assist you."
     3. If ID found: Provide FULL SUMMARY (Name, Items, Total, Status, Delivery) using HTML <b> for bold.
     4. NEVER use Markdown stars (**) for bold. Use HTML tags <b> and </b>.
     5. Return Policy: 3 days. 
-    6. Always start with 'Namaste! 🙏'.
     """
     try:
         client = Groq(api_key=get_api_key())
         resp = client.chat.completions.create(model=DEFAULT_MODEL, messages=[{"role":"system","content":sys_prompt},{"role":"user","content":user_msg}])
         return resp.choices[0].message.content
-    except: return "Namaste! 🙏 Please check your connection or Order ID."
+    except: return "Please check your connection or Order ID."
 
 # --- UI Assembly ---
 
