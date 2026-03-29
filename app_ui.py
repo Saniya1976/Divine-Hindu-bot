@@ -251,8 +251,12 @@ def generate_reply(user_msg, intent_data):
     order_data = ORDER_DB.get(order_id)
     ctx = f"DB RECORD for {order_id}: {json.dumps(order_data)}" if order_data else "No order record found."
     
+    # Check if this is the first assistant reply
+    greeting = "Always start this first reply with 'Namaste! 🙏'." if len(st.session_state.messages) <= 1 else "DO NOT use 'Namaste' or greetings."
+    
     sys_prompt = f"""
     You are 'Divine Hindu AI Assistant'. Data: {ctx}
+    {greeting}
     STRICT RULES:
     1. MAX 2 SENTENCES. No explanation of ability.
     2. If ID missing: "Please share your Order ID (DH101-DH115) so I can assist you."
